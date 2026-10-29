@@ -1,2 +1,80 @@
-# project-notes-local
-Local macOS workspace for two projects: documents, context, and reply drafts with Codex subscription sign-in. Source code only.
+# 과제노트 · Project Notes Local
+
+두 과제의 문서·메일·챗·업무 맥락을 각각 관리하고, 답장 초안과 업무 상담을 받는 macOS용 로컬 앱입니다. 자료는 직접 넣으며 메일·메신저에 자동 접속하거나 메시지를 발송하지 않습니다.
+
+이 저장소에는 앱 소스와 합성 테스트만 포함합니다. 업무 자료, 데이터베이스, 로그인 정보는 포함하지 않습니다.
+
+## 회사 맥에서 시작하기
+
+1. 아래 명령으로 저장소를 Clone하고, 내려받은 `project-notes-local` 폴더를 Codex 프로젝트로 여세요.
+
+```sh
+git clone https://github.com/star1-one/project-notes-local.git
+cd project-notes-local
+```
+
+2. Python 3.10 이상과 공식 Codex CLI를 준비하세요. AI 생성은 그 맥에서 로그인한 ChatGPT 계정을 사용합니다. 사용할 계정에 Codex 이용 권한이 필요합니다.
+3. 저장소 폴더의 터미널에서 실행하세요.
+
+```sh
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python launch.py
+```
+
+브라우저가 자동으로 열립니다. 기본 주소는 `http://127.0.0.1:8766`이며, 사용할 수 없으면 런처가 다른 로컬 포트를 찾습니다. 실행 터미널을 열어둔 채 사용하고, 종료할 때 Control+C를 누르세요.
+
+설정 후에는 `과제 도우미 실행.command` 또는 `과제 도우미.app`을 열어도 됩니다. 런처는 `.venv/bin/python3`를 우선 사용합니다. `.app`은 실행 래퍼이므로 파일을 떼어내지 말고 저장소 폴더 전체를 유지하세요.
+
+## Codex에서 개발 이어가기
+
+저장소를 연 새 대화에 다음 문장을 입력하세요.
+
+```text
+HANDOFF.md와 README.md를 읽고 기존 과제노트 앱 개발을 이어가줘. 이 맥의 실행 환경과 Codex 연결을 확인하고, 자료를 보존하면서 앱을 실행해줘. 현재 ChatGPT 구독 연결을 유지하고 로컬 AI 전환은 아직 하지 마.
+```
+
+기존 Codex 대화 자체가 저장소로 이동하는 것은 아닙니다. `HANDOFF.md`가 요구사항·구현·검증·남은 작업을 전달합니다.
+
+## AI 연결
+
+공식 Codex CLI의 기존 ChatGPT 로그인을 재사용합니다. CLI가 PATH에 있다면 아래 명령으로 확인할 수 있습니다.
+
+```sh
+codex login status
+```
+
+로그인이 필요하면 회사 맥에서 직접 `codex login`을 진행하고 앱의 연결 상태를 다시 확인하세요. 다른 기기의 인증 파일·토큰·쿠키를 복사할 필요는 없습니다. 별도 ChatGPT 계정을 쓰면 해당 계정의 이용 권한과 데이터 설정을 확인하세요.
+
+앱은 PATH 및 지원하는 ChatGPT/Codex 앱 번들에서 실행 파일을 찾습니다. 설치 위치가 다르면 `PROJECT_DESK_CODEX_PATH`에 **공식 Codex 실행 파일 경로**를 지정할 수 있습니다. 이 값은 인증 토큰이 아닙니다. API 키 로그인 상태에서는 생성을 차단하며, API 키 과금으로 자동 전환하지 않습니다. Pro를 포함한 실제 구독의 Codex 사용 한도와 계정 정책이 적용됩니다.
+
+## 사용과 지원 파일
+
+- **과제 1·2:** 자료·대화·맥락을 분리해서 저장합니다. 과제 이름과 설명은 수정할 수 있습니다.
+- **자료실:** 파일을 추가하거나 메일·챗·메모를 붙여넣습니다. 원문 날짜를 모르면 비워두세요.
+- **업무 대화:** 받은 메시지의 답장 초안 또는 업무 상담을 요청합니다. 참고 자료를 눌러 원문을 확인하세요.
+- **과제 맥락:** 직접 수정하거나 AI 정리 결과를 검토한 뒤 적용합니다.
+
+TXT, MD, CSV, TSV, JSON, LOG, HTML, EML, DOCX, HWPX, 텍스트가 있는 PDF를 지원합니다. 파일당 최대 20MB, 추출 본문 최대 200만자입니다. PDF에는 `requirements.txt`의 pypdf 또는 로컬 pdftotext가 필요합니다. HWP는 HWPX/PDF로 변환하고, 스캔 PDF는 OCR 처리 후 넣으세요. EML 첨부파일은 따로 추가합니다.
+
+## 데이터와 개인정보
+
+첫 실행 시 저장소 폴더에 `data/workspace.sqlite3`를 생성합니다. 원본 파일·추출 본문·맥락·대화를 이 데이터베이스에 보관합니다. `data/`는 버전 관리에서 제외하며, 업무 자료를 공개 저장소나 이슈에 올리지 마세요.
+
+**저장과 문서 추출·검색은 로컬이지만, 현재 AI 생성은 OpenAI 서버를 사용합니다.** 요청 시 질문·선택한 과제의 자료 본문 또는 검색 구간·저장된 맥락·대화 이력이 전송됩니다. 자료가 적으면 해당 과제의 본문 전체가 포함될 수 있습니다. 모델 학습·보관 정책은 사용하는 계정과 서비스 설정에 따르며, 앱이 학습 제외를 보장하거나 계정 설정을 강제하지 않습니다. 완전 로컬 AI 연결은 아직 구현하지 않았습니다.
+
+앱의 JSON 백업은 보관용이며 재가져오기 UI는 없습니다. 전체 데이터를 옮길 때는 앱을 종료한 뒤 `data` 폴더를 별도로 보관하거나 SQLite backup API로 일관된 스냅샷을 만드세요. 백업에도 업무 자료가 포함되므로 소스 저장소와 분리합니다. 브라우저 입력창의 미전송 초안은 데이터베이스에 포함되지 않습니다.
+
+## 검증
+
+```sh
+.venv/bin/python -m unittest discover -s tests -v
+```
+
+테스트는 임시 폴더와 합성 자료를 사용합니다. 선택적 `tests/live_smoke.py`는 실제 Codex 구독 요청을 한 번 사용하므로 일반 테스트와 별도로 실행합니다.
+
+이 앱은 `127.0.0.1`에서만 접속을 받습니다. 새 맥에서는 Python·PDF 의존성·Codex 버전과 로그인·로컬 포트 접근을 다시 확인하세요. 자세한 구현과 검증 범위는 `HANDOFF.md`에 있습니다.
+
+## 라이선스
+
+MIT License. 전문은 `LICENSE`를 참고하세요.

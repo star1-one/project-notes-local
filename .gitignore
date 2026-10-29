@@ -1,0 +1,38 @@
+# Private workspace: documents, conversations, extracted text and local database
+data/
+backups/
+uploads/
+private/
+*.sqlite
+*.sqlite3
+*.db
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite3-wal
+*.sqlite3-shm
+
+# Credentials and machine-specific settings
+.env
+.env.*
+!.env.example
+.codex/
+.aws/
+.ssh/
+auth.json
+credentials.json
+*.pem
+*.key
+
+# Python environments and generated caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Transfer packages may contain private database backups
+*.zip
+*.tar
+*.tar.gz
+*.log
+.DS_Store

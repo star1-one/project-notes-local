@@ -1,0 +1,4 @@
+#!/bin/zsh
+set -eu
+project_dir=${0:A:h:h:h:h}
+/usr/bin/open -a Terminal "$project_dir/과제 도우미 실행.command"
